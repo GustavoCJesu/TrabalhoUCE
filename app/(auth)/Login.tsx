@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 import React, { useState } from 'react';
-import { useRouter } from 'expo-router'
-import * as SecureStore from 'expo-secure-store'
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -41,16 +41,6 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => router.push('/(recover)/recAcesso')}>
-        <Text style={{ color: 'white' }}>
-          Tela de Recuperação de Acesso
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.push('/(recover)/recSenha')}>
-        <Text style={{ color: 'white' }}>
-          Tela de Recuperação de Senha
-        </Text>
-      </TouchableOpacity>
       <View style={styles.card}>
         <Text style={styles.titulo}>Bem Vindo ao Unifae Care</Text>
         <Text style={styles.subtitulo}>Entre com suas credenciais para continuar</Text>

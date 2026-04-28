@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ScrollView, Image, StyleSheet, Text, View } from 'react-native'; // Correto
 import { MaterialIcons } from '@expo/vector-icons';
 
+
 const CardPessoa = ({ titulo, pessoa, pessoaEmail }: { titulo: string, pessoa: string, pessoaEmail: string }) => {
     return (
         <View style={styles.itemCard}>
@@ -9,7 +10,7 @@ const CardPessoa = ({ titulo, pessoa, pessoaEmail }: { titulo: string, pessoa: s
             <View style={{ flexDirection: 'row', marginTop: 20, alignItems: 'center' }}>
                 <Image
                     style={styles.imgCard}
-                    source={require('../../assets/images/icon.png')}
+                    source={require('../../../assets/images/icon.png')}
                     resizeMode="contain"
                 />
                 <View style={{ marginLeft: 20, width: '80%' }}>
@@ -23,7 +24,7 @@ const CardPessoa = ({ titulo, pessoa, pessoaEmail }: { titulo: string, pessoa: s
 
 
 
-export default function Profile() {
+export default function ProfileScreen() {
     const [id, setID] = useState('')
     const [user, setUser] = useState('')
     const [fisio, setFisio] = useState('')
@@ -50,7 +51,7 @@ export default function Profile() {
                 <View style={styles.card}>
                     <Text style={styles.titulo}>Unifae Care</Text>
                     <View style={{ alignItems: 'center' }}>
-                        <Image style={styles.imgPerfil} source={require('../../assets/images/splash-icon.png')} resizeMode="contain" />
+                        <Image style={styles.imgPerfil} source={require('../../../assets/images/splash-icon.png')} resizeMode="contain" />
                         <Text style={[styles.titulo, { marginTop: 20 }]}>{user}</Text>
                         <Text style={{ fontSize: 16, color: '#10B981' }}>ID: {id}</Text>
                     </View>
@@ -86,7 +87,7 @@ export default function Profile() {
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#464c55', padding: 10, marginTop: 10, borderRadius: 10, justifyContent: 'space-between', paddingHorizontal: 20 }}>
                                 <Image
                                     style={{ width: 50, height: 50, borderRadius: 100 }}
-                                    source={require('../../assets/images/icon.png')}
+                                    source={require('../../../assets/images/icon.png')}
                                     resizeMode="contain"
                                 />
                                 <Text style={{ fontSize: 16, color: 'white' }}>Lembrete</Text>
@@ -95,7 +96,7 @@ export default function Profile() {
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#464c55', padding: 10, marginTop: 10, borderRadius: 10, justifyContent: 'space-between', paddingHorizontal: 20 }}>
                                 <Image
                                     style={{ width: 50, height: 50, borderRadius: 100 }}
-                                    source={require('../../assets/images/icon.png')}
+                                    source={require('../../../assets/images/icon.png')}
                                     resizeMode="contain"
                                 />
                                 <Text style={{ fontSize: 16, color: 'white' }}>Notificações</Text>
@@ -104,7 +105,7 @@ export default function Profile() {
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#464c55', padding: 10, marginTop: 10, borderRadius: 10, justifyContent: 'space-between', paddingHorizontal: 20 }}>
                                 <Image
                                     style={{ width: 50, height: 50, borderRadius: 100 }}
-                                    source={require('../../assets/images/icon.png')}
+                                    source={require('../../../assets/images/icon.png')}
                                     resizeMode="contain"
                                 />
                                 <Text style={{ fontSize: 16, color: 'white' }}>Privacidade e Dados</Text>
@@ -129,6 +130,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#111827',
         paddingHorizontal: 20,
+        paddingVertical: 70,
     },
     titulo: {
         color: '#F9FAFB',

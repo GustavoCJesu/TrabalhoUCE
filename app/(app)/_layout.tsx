@@ -1,20 +1,51 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import { View } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
+export default function AppLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{headerShown: false}}>
-        <Stack.Screen name='paginaPrincipal' options={{headerShown:  false}}/>
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: true,
+        tabBarStyle: {
+          backgroundColor: '#1F2937',
+          height: 90,
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
+          position: 'absolute',
+          borderTopWidth: 0,
+        },
+        tabBarActiveTintColor: '#064e3b',
+        tabBarInactiveTintColor: '#9ca3af',
+      }}
+    >
+      {/* Aba da Página Principal */}
+      <Tabs.Screen
+        name="paginaPrincipal" // Refere-se a paginaPrincipal.tsx
+        options={{
+          title: 'INÍCIO',
+          tabBarIcon: ({ color }) => <Ionicons name="home-outline" size={24} color={color} />,
+        }}
+      />
+
+      {/* Aba do Perfil (que está dentro da subpasta) */}
+      <Tabs.Screen
+        name="ProfileScreen" // Refere-se a (profile)/index.tsx
+        options={{
+          title: 'PERFIL',
+          tabBarIcon: ({ focused, color }) => (
+            <View style={{
+              paddingHorizontal: 15,
+              paddingVertical: 5,
+              borderRadius: 15,
+            }}>
+              <MaterialIcons name='person' size={20} color="#9CA3AF"/>
+            </View>
+          ),
+        }}
+      />
+    </Tabs>
   );
 }

@@ -3,5 +3,5 @@ import { Redirect} from 'expo-router'
 
 
 export default function Home() {
-  return <Redirect href="/(profile)/ProfileScreen" />;
+  return <Redirect href="/(app)/(profile)/ProfileScreen" />;
 }

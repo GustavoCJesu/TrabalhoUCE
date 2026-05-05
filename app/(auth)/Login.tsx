@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
-import * as SecureStore from 'expo-secure-store';
 import React, { useState } from 'react';
+import * as SecureStore from 'expo-secure-store';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function Login() {
@@ -9,33 +9,50 @@ export default function Login() {
 
   const router = useRouter()
 
+  const login = async () => {
 
-  interface Usuario {
-    id: string
-    nome: string
-    email: string
-    senha: string
-  }
+    try {
+      const response = await fetch('http://185.217.125.219:3000/api/v1/auth/login', {
+        method: 'POST',
+        headers: {
+          "Accept": 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "email": email,
+          "password": senha,
+          "accessMode": "APP",
+          "appId": 1
+        })
+      })
+      const dados = await response.json()
 
-  async function login() {
-    if (!email || !senha) {
-      Alert.alert('Erro', 'Preencha todos os campos.')
-      return
+      
+
+
+      if(response.ok){
+        console.log('logado com sucesso')
+        const access_token = dados.access_token
+
+        console.log(access_token)
+
+        SecureStore.setItemAsync('userToken', access_token)
+
+        router.push('/(app)/paginaPrincipal')
+        
+      }else{
+        Alert.alert('Erro no login!', 'Login ou senha incorretos')
+      }
+
+      console.log(email)
+
+
+    } catch (e) {
+      console.log('Erro ao fazer o login', e)
     }
 
-    const raw = await SecureStore.getItemAsync('usuarios')
-    const usuarios: Usuario[] = raw ? JSON.parse(raw) : []
 
-    const usuario = usuarios.find(
-      u => u.email === email.toLowerCase().trim() && u.senha === senha
-    )
 
-    if (!usuario) {
-      Alert.alert('Erro', 'E-mail ou senha incorretos.')
-      return
-    }
-
-    router.push('/(app)/paginaPrincipal')
   }
 
 

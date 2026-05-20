@@ -1,9 +1,9 @@
-import { Redirect } from 'expo-router';
-import React from 'react';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
+
+
 import * as SecureStore from 'expo-secure-store';
+import { jwtDecode } from 'jwt-decode';
 
 
 
@@ -17,7 +17,6 @@ export default function Home() {
 
     try{
       
-      await SecureStore.setItemAsync('userToken', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjksImVtYWlsIjoiZ3VzdGF2by5qZXN1aW5vQHNvdS5mYWUuYnIiLCJyb2xlIjoiUEFUSUVOVCIsImFwcElkIjoxLCJjb3Vyc2VJZCI6MSwiaWF0IjoxNzc3OTQwNjYzLCJleHAiOjE3Nzc5NDE1NjN9.jf4x97itpznaul08LDPenv8Y4VA32q8JEUSrQMmSqBE')
       const access_token = await SecureStore.getItemAsync('userToken')
 
       if(access_token){
@@ -43,7 +42,7 @@ export default function Home() {
 
   }
     verifyLogin()
-  }, [])
+  }, [router])
 
   return null
 }

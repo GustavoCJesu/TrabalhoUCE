@@ -1,14 +1,23 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 export default function HomeScreen() {
   const [userName, setUserName] = useState ('')
   const [nExe, setNExe] = useState (0)
-  const [exes, setExes] = useState ({})
+  const [exes, setExes] = useState<user> ({
+    nome: '',
+    detalhe: ''
+  })
   const [temp, setTemp] = useState (0)
   const [status, setStatus] = useState(0)
+
+  type user = {
+    nome: string,
+    detalhe: string,
+
+  }
 
 
   useEffect(() => {
@@ -39,7 +48,7 @@ export default function HomeScreen() {
       <View style={styles.card}>
         <View style={styles.sec1}>
           <Text style={styles.cardTit}>Seu plano de hoje</Text>
-          <Text style={styles.nExe}>{nExe == 0 ? 'Nenhum exercicio' : nExe > 1 ? nExe +' exercícios' : nExe + ' exercício'}</Text>
+          <Text style={styles.nExe}>{nExe === 0 ? 'Nenhum exercicio' : nExe > 1 ? nExe +' exercícios' : nExe + ' exercício'}</Text>
         </View>
         <View style={styles.itemCard}>
           <Text style={styles.cardTit}>{exes.nome}</Text>
@@ -63,7 +72,7 @@ export default function HomeScreen() {
               tintColor="#10B981"
               backgroundColor="#3d5875">
               {
-                (fill) => (
+                (fill: number) => (
                   <Text style={styles.cardTit}>
                     { status } %
                   </Text>

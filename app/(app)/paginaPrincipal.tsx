@@ -1,16 +1,17 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
-  const [userName, setUserName] = useState ('')
-  const [nExe, setNExe] = useState (0)
-  const [exes, setExes] = useState<user> ({
+  const [userName, setUserName] = useState('')
+  const [nExe, setNExe] = useState(0)
+  const [exes, setExes] = useState<user>({
     nome: '',
     detalhe: ''
   })
-  const [temp, setTemp] = useState (0)
+  const [temp, setTemp] = useState(0)
   const [status, setStatus] = useState(0)
 
   type user = {
@@ -33,56 +34,60 @@ export default function HomeScreen() {
   }, [])
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.sec1, {marginBottom: 40}]}>
-        <View>
-          <Text style={styles.titulo}>Olá, {userName}!</Text>
-          <Text style={styles.subtitulo}>Seu cuidado diário{'\n'}faz toda a diferença na{'\n'}sua recuperação</Text>
-        </View>
-        <Image
-            style={styles.imgCard}
-            source={require('../../assets/snack-icon.png')}
-            resizeMode="contain"
-        />
-      </View>
-      <View style={styles.card}>
-        <View style={styles.sec1}>
-          <Text style={styles.cardTit}>Seu plano de hoje</Text>
-          <Text style={styles.nExe}>{nExe === 0 ? 'Nenhum exercicio' : nExe > 1 ? nExe +' exercícios' : nExe + ' exercício'}</Text>
-        </View>
-        <View style={styles.itemCard}>
-          <Text style={styles.cardTit}>{exes.nome}</Text>
-          <Text style={[styles.subtitulo, {marginBottom: 20}]}>{exes.detalhe}</Text>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Ionicons name="time-outline" size={30} color="#10B981" />
-            <Text style={[styles.nExe, {marginBottom: 5, marginLeft: 5}]}>{temp} minutos</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <View style={styles.pageContent}>
+          <View style={[styles.sec1, { marginBottom: 40 }]}>
+            <View>
+              <Text style={styles.titulo}>Olá, {userName}!</Text>
+              <Text style={styles.subtitulo}>Seu cuidado diário{'\n'}faz toda a diferença na{'\n'}sua recuperação</Text>
+            </View>
+            <Image
+              style={styles.imgCard}
+              source={require('../../assets/images/favicon.png')}
+              resizeMode="contain"
+            />
+          </View>
+          <View style={styles.card}>
+            <View style={styles.sec1}>
+              <Text style={styles.cardTit}>Seu plano de hoje</Text>
+              <Text style={styles.nExe}>{nExe === 0 ? 'Nenhum exercicio' : nExe > 1 ? nExe + ' exercícios' : nExe + ' exercício'}</Text>
+            </View>
+            <View style={styles.itemCard}>
+              <Text style={styles.cardTit}>{exes.nome}</Text>
+              <Text style={[styles.subtitulo, { marginBottom: 20 }]}>{exes.detalhe}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="time-outline" size={30} color="#10B981" />
+                <Text style={[styles.nExe, { marginBottom: 5, marginLeft: 5 }]}>{temp} minutos</Text>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.botao}>
+            <Text style={styles.txtBotao}>Iniciar exercício</Text>
+          </TouchableOpacity>
+          <View style={styles.card}>
+            <Text style={styles.cardTit}>Seu progresso</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', marginTop: 20 }}>
+              <AnimatedCircularProgress
+                size={100}
+                width={10}
+                fill={status}
+                tintColor="#10B981"
+                backgroundColor="#3d5875">
+                {
+                  (fill: number) => (
+                    <Text style={styles.cardTit}>
+                      {status} %
+                    </Text>
+                  )
+                }
+              </AnimatedCircularProgress>
+              <Text style={styles.cardTit}>{status <= 25 ? 'Você precisa se exercitar' : status <= 50 ? 'Você está indo bem' : 'Parabens pelo resultado da semana'}</Text>
+            </View>
           </View>
         </View>
-      </View>
-      <TouchableOpacity style={styles.botao}>
-        <Text style={styles.txtBotao}>Iniciar exercício</Text>
-      </TouchableOpacity>
-      <View style={styles.card}>
-        <Text style={styles.cardTit}>Seu progresso</Text>
-        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', marginTop: 20}}>
-          <AnimatedCircularProgress
-              size={100}
-              width={10}
-              fill={status}
-              tintColor="#10B981"
-              backgroundColor="#3d5875">
-              {
-                (fill: number) => (
-                  <Text style={styles.cardTit}>
-                    { status } %
-                  </Text>
-                )
-              }
-            </AnimatedCircularProgress>
-          <Text style={styles.cardTit}>{status <= 25 ? 'Você precisa se exercitar' : status <= 50 ? 'Você está indo bem' : 'Parabens pelo resultado da semana'}</Text>
-        </View>
-      </View>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
@@ -92,21 +97,26 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#111827',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+  },
+  pageContent:{
+    marginHorizontal:10,
+    marginBottom:120,
+    marginTop: 20
   },
   sec1: {
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center'
   },
   titulo: {
     color: '#F9FAFB',
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
     fontSize: 22
   },
   cardTit: {
     color: '#F9FAFB',
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
     fontSize: 16
   },
   imgCard: {
@@ -119,11 +129,11 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   itemCard: {
-      marginTop: 30,
-      backgroundColor: '#374151',
-      paddingHorizontal: 20,
-      paddingVertical: 20,
-      borderRadius: 10,
+    marginTop: 30,
+    backgroundColor: '#374151',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 10,
   },
   nExe: {
     color: '#10B981',
@@ -138,8 +148,8 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   txtBotao: {
-    fontSize: 14, 
-    color: '#F9FAFB', 
+    fontSize: 14,
+    color: '#F9FAFB',
     fontWeight: 'bold',
     textAlign: 'center'
   },

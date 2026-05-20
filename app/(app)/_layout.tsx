@@ -25,25 +25,16 @@ export default function AppLayout() {
       <Tabs.Screen
         name="paginaPrincipal" // Refere-se a paginaPrincipal.tsx
         options={{
-          title: 'INÍCIO',
+          title: 'Início',
           tabBarIcon: ({ color }) => <Ionicons name="home-outline" size={24} color={color} />,
         }}
       />
 
       {/* Aba do Perfil (que está dentro da subpasta) */}
       <Tabs.Screen
-        name="ProfileScreen" // Refere-se a (profile)/index.tsx
+        name="profile/ProfileScreen" // Refere-se a (profile)/index.tsx
         options={{
-          title: 'PERFIL',
-          tabBarIcon: ({ focused, color }) => (
-            <View style={{
-              paddingHorizontal: 15,
-              paddingVertical: 5,
-              borderRadius: 15,
-            }}>
-              <MaterialIcons name='person' size={20} color="#9CA3AF"/>
-            </View>
-          ),
+          title: 'Perfil',tabBarIcon: ({ color }) => <Ionicons name="home-outline" size={24} color={color} />,  
         }}
       />
     </Tabs>

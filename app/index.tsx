@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useEffect } from 'react';
 
 
@@ -12,37 +12,37 @@ export default function Home() {
 
   const router = useRouter()
 
-  useEffect(()=>{
-    const verifyLogin = async ()=>{
+  // useEffect(()=>{
+  //   const verifyLogin = async ()=>{
 
-    try{
+  //   try{
       
-      const access_token = await SecureStore.getItemAsync('userToken')
+  //     const access_token = await SecureStore.getItemAsync('userToken')
 
-      if(access_token){
-      console.log('Tem token')
+  //     if(access_token){
+  //     console.log('Tem token')
 
-      const payload = jwtDecode(access_token)
-      const dateNow = Math.floor(Date.now() / 1000)
+  //     const payload = jwtDecode(access_token)
+  //     const dateNow = Math.floor(Date.now() / 1000)
 
-      if(payload.exp && payload.exp < dateNow){
-        console.log('Token expirou. Fazendo logout...')
-        await SecureStore.deleteItemAsync('userToken')
+  //     if(payload.exp && payload.exp < dateNow){
+  //       console.log('Token expirou. Fazendo logout...')
+  //       await SecureStore.deleteItemAsync('userToken')
 
-        router.replace('/(auth)/Login')
-      }else{
-        return router.replace('/(app)/paginaPrincipal')
-      }
-    }else{
-      return router.replace('/(auth)/Login')
-    }
-    }catch(e){
-      console.log(e)
-    }
+  //       router.replace('/(auth)/Login')
+  //     }else{
+  //       return router.replace('/(app)/paginaPrincipal')
+  //     }
+  //   }else{
+  //     return router.replace('/(auth)/Login')
+  //   }
+  //   }catch(e){
+  //     console.log(e)
+  //   }
 
-  }
-    verifyLogin()
-  }, [router])
+  // }
+  //   verifyLogin()
+  // }, [router])
 
-  return null
+  return <Redirect href={'/(app)/paginaPrincipal'}/>
 }

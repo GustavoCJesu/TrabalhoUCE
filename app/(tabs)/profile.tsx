@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, Image, StyleSheet, Text, View } from 'react-native'; // Correto
+import { ScrollView, Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native'; // Correto
 import { MaterialIcons } from '@expo/vector-icons';
+import * as SecureStore from 'expo-secure-store';
+import { router } from 'expo-router';
+
+
+
+const logout = async () => {
+    await SecureStore.deleteItemAsync('userToken')
+    router.replace('/(auth)/login')
+}
 
 
 const CardPessoa = ({ titulo, pessoa, pessoaEmail }: { titulo: string, pessoa: string, pessoaEmail: string }) => {
@@ -10,7 +19,7 @@ const CardPessoa = ({ titulo, pessoa, pessoaEmail }: { titulo: string, pessoa: s
             <View style={{ flexDirection: 'row', marginTop: 20, alignItems: 'center' }}>
                 <Image
                     style={styles.imgCard}
-                    source={require('../../../assets/images/icon.png')}
+                    source={require('../../assets/images/icon.png')}
                     resizeMode="contain"
                 />
                 <View style={{ marginLeft: 20, width: '80%' }}>
@@ -51,7 +60,7 @@ export default function ProfileScreen() {
                 <View style={styles.card}>
                     <Text style={styles.titulo}>Unifae Care</Text>
                     <View style={{ alignItems: 'center' }}>
-                        <Image style={styles.imgPerfil} source={require('../../../assets/images/splash-icon.png')} resizeMode="contain" />
+                        <Image style={styles.imgPerfil} source={require('../../assets/images/splash-icon.png')} resizeMode="contain" />
                         <Text style={[styles.titulo, { marginTop: 20 }]}>{user}</Text>
                         <Text style={{ fontSize: 16, color: '#10B981' }}>ID: {id}</Text>
                     </View>
@@ -87,7 +96,7 @@ export default function ProfileScreen() {
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#464c55', padding: 10, marginTop: 10, borderRadius: 10, justifyContent: 'space-between', paddingHorizontal: 20 }}>
                                 <Image
                                     style={{ width: 50, height: 50, borderRadius: 100 }}
-                                    source={require('../../../assets/images/icon.png')}
+                                    source={require('../../assets/images/icon.png')}
                                     resizeMode="contain"
                                 />
                                 <Text style={{ fontSize: 16, color: 'white' }}>Lembrete</Text>
@@ -96,7 +105,7 @@ export default function ProfileScreen() {
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#464c55', padding: 10, marginTop: 10, borderRadius: 10, justifyContent: 'space-between', paddingHorizontal: 20 }}>
                                 <Image
                                     style={{ width: 50, height: 50, borderRadius: 100 }}
-                                    source={require('../../../assets/images/icon.png')}
+                                    source={require('../../assets/images/icon.png')}
                                     resizeMode="contain"
                                 />
                                 <Text style={{ fontSize: 16, color: 'white' }}>Notificações</Text>
@@ -105,7 +114,7 @@ export default function ProfileScreen() {
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#464c55', padding: 10, marginTop: 10, borderRadius: 10, justifyContent: 'space-between', paddingHorizontal: 20 }}>
                                 <Image
                                     style={{ width: 50, height: 50, borderRadius: 100 }}
-                                    source={require('../../../assets/images/icon.png')}
+                                    source={require('../../assets/images/icon.png')}
                                     resizeMode="contain"
                                 />
                                 <Text style={{ fontSize: 16, color: 'white' }}>Privacidade e Dados</Text>
@@ -113,10 +122,12 @@ export default function ProfileScreen() {
                             </View>
                         </View>
                     </View>
-                    <View style={{backgroundColor: '#f0a6a6', width: '80%', alignSelf: 'center', margin: 20, padding: 10, borderRadius: 20}}>
-                        <Text style={{color: '#b62a2a', textAlign: 'center'}}>
-                            Sair
-                        </Text>
+                    <View style={{ backgroundColor: '#f0a6a6', width: '80%', alignSelf: 'center', margin: 20, padding: 10, borderRadius: 20 }}>
+                        <TouchableOpacity onPress={logout}>
+                            <Text style={{ color: '#b62a2a', textAlign: 'center' }}>
+                                Sair
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>

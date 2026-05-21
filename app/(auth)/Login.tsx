@@ -38,7 +38,7 @@ export default function Login() {
 
         SecureStore.setItemAsync('userToken', access_token)
 
-        router.push('/(app)/paginaPrincipal')
+        router.push('/(tabs)/home')
         
       }else{
         Alert.alert('Erro no login!', 'Login ou senha incorretos')
@@ -79,7 +79,7 @@ export default function Login() {
 
       <View style={{ alignItems: 'center', marginTop: 20 }}>
         <Text style={{ color: '#F9FAFB', fontSize: 16 }}>Não tem uma conta?</Text>
-        <TouchableOpacity style={{ marginTop: 10 }} onPress={() => router.replace('/Registrar')}>
+        <TouchableOpacity style={{ marginTop: 10 }} onPress={() => router.replace('/(auth)/registrar')}>
           <Text style={styles.recSenha}>Clique aqui</Text>
         </TouchableOpacity>
       </View>

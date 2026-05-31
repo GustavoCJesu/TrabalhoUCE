@@ -1,37 +1,28 @@
+import { useHome } from '@/src/presentation/hooks/useHome';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import React from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
-  const [userName, setUserName] = useState('')
-  const [nExe, setNExe] = useState(0)
-  const [exes, setExes] = useState<user>({
-    nome: '',
-    detalhe: ''
-  })
-  const [temp, setTemp] = useState(0)
-  const [status, setStatus] = useState(0)
+  const { home, loading, error } = useHome()
 
-  type user = {
-    nome: string,
-    detalhe: string,
-
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator size="large" color="#10B981" />
+      </SafeAreaView>
+    )
   }
 
-
-  useEffect(() => {
-    setUserName('Igor')
-    setNExe(1)
-    setExes({
-      nome: 'Mobilidade de ombro',
-      detalhe: 'Pós cirurgico - Câncer de mama'
-    })
-    setTemp(12)
-    setStatus(50)
-
-  }, [])
+  if (error || !home) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.titulo}>{error ?? 'Erro ao carregar'}</Text>
+      </SafeAreaView>
+    )
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -39,7 +30,7 @@ export default function HomeScreen() {
         <View style={styles.pageContent}>
           <View style={[styles.sec1, { marginBottom: 40 }]}>
             <View>
-              <Text style={styles.titulo}>Olá, {userName}!</Text>
+              <Text style={styles.titulo}>Olá, Paciente!</Text>
               <Text style={styles.subtitulo}>Seu cuidado diário{'\n'}faz toda a diferença na{'\n'}sua recuperação</Text>
             </View>
             <Image
@@ -51,14 +42,14 @@ export default function HomeScreen() {
           <View style={styles.card}>
             <View style={styles.sec1}>
               <Text style={styles.cardTit}>Seu plano de hoje</Text>
-              <Text style={styles.nExe}>{nExe === 0 ? 'Nenhum exercicio' : nExe > 1 ? nExe + ' exercícios' : nExe + ' exercício'}</Text>
+              <Text style={styles.nExe}>{home.plan.totalExercises === 0 ? 'Nenhum exercicio' : home.plan.totalExercises > 1 ? home.plan.totalExercises + ' exercícios' : home.plan.totalExercises + ' exercício'}</Text>
             </View>
             <View style={styles.itemCard}>
-              <Text style={styles.cardTit}>{exes.nome}</Text>
-              <Text style={[styles.subtitulo, { marginBottom: 20 }]}>{exes.detalhe}</Text>
+              <Text style={styles.cardTit}>{home.nextExercise.exerciseName}</Text>
+              <Text style={[styles.subtitulo, { marginBottom: 20 }]}>{home.nextExercise.problem}</Text>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Ionicons name="time-outline" size={30} color="#10B981" />
-                <Text style={[styles.nExe, { marginBottom: 5, marginLeft: 5 }]}>{temp} minutos</Text>
+                <Text style={[styles.nExe, { marginBottom: 5, marginLeft: 5 }]}>{'--'} minutos</Text>
               </View>
             </View>
           </View>
@@ -71,18 +62,18 @@ export default function HomeScreen() {
               <AnimatedCircularProgress
                 size={100}
                 width={10}
-                fill={status}
+                fill={home.plan.percentCompleted}
                 tintColor="#10B981"
                 backgroundColor="#3d5875">
                 {
                   (fill: number) => (
                     <Text style={styles.cardTit}>
-                      {status} %
+                      {home.plan.percentCompleted} %
                     </Text>
                   )
                 }
               </AnimatedCircularProgress>
-              <Text style={styles.cardTit}>{status <= 25 ? 'Você precisa se exercitar' : status <= 50 ? 'Você está indo bem' : 'Parabens pelo resultado da semana'}</Text>
+              <Text style={styles.cardTit}>{home.plan.percentCompleted <= 25 ? 'Você precisa se exercitar' : home.plan.percentCompleted <= 50 ? 'Você está indo bem' : 'Parabens pelo resultado da semana'}</Text>
             </View>
           </View>
         </View>
@@ -99,9 +90,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#111827',
     paddingHorizontal: 20,
   },
-  pageContent:{
-    marginHorizontal:10,
-    marginBottom:120,
+  pageContent: {
+    marginHorizontal: 10,
+    marginBottom: 120,
     marginTop: 20
   },
   sec1: {

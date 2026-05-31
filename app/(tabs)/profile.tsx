@@ -8,7 +8,7 @@ import { router } from 'expo-router';
 
 const logout = async () => {
     await SecureStore.deleteItemAsync('userToken')
-    router.replace('/(auth)/login')
+    router.replace('/(auth)/Login')
 }
 
 

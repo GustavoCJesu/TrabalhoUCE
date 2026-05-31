@@ -1,45 +1,26 @@
-import { Redirect, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import * as SecureStore from 'expo-secure-store';
-import { jwtDecode } from 'jwt-decode';
+import { container } from '@/src/core/config/container'
 
 
 
 
-export default function Home() {
+export default function Index() {
 
   const router = useRouter()
 
-  useEffect(()=>{
-    const verifyLogin = async ()=>{
+  useEffect(() => {
+    const verifyLogin = async () => {
 
-    try{
-      
-      await SecureStore.deleteItemAsync('userToken')
-      const access_token = await SecureStore.getItemAsync('userToken')
-      console.log('Caiu no try')
-      if(access_token){
-      console.log('Tem token')
+        const isAuthenticated = await container.checkAuthUseCase.execute()
 
-      const payload = jwtDecode(access_token)
-      const dateNow = Math.floor(Date.now() / 1000)
-
-      if(payload.exp && payload.exp < dateNow){
-        console.log('Token expirou. Fazendo logout...')
-        await SecureStore.deleteItemAsync('userToken')
-
-        router.replace('/(auth)/login')
-      }else{
-        return router.replace('/(tabs)/home')
-      }
-    }else{
-      return router.replace('/(auth)/login')
-    }
-    }catch(e){
-      console.log(e)
+        if(isAuthenticated){
+          router.replace('/(tabs)/home')
+        }else{
+          router.replace('/(auth)/Login')
+        }
     }
 
-  }
     verifyLogin()
   }, [router])
 

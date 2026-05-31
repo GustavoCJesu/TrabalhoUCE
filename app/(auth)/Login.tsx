@@ -1,60 +1,29 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import * as SecureStore from 'expo-secure-store';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+
+import { useLogin } from '@/src/presentation/hooks/useLogin'
+
+
 
 export default function Login() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
 
   const router = useRouter()
+  const { login, loading, error } = useLogin()
 
-  const login = async () => {
+  const handleLogin = async () => {
+    const ok = await login(email, senha)
 
-    try {
-      const response = await fetch('http://185.217.125.219:3000/api/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          "Accept": 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          "email": email,
-          "password": senha,
-          "accessMode": "APP",
-          "appId": 1
-        })
-      })
-      const dados = await response.json()
-
-      
-
-
-      if(response.ok){
-        console.log('logado com sucesso')
-        const access_token = dados.access_token
-
-        console.log(access_token)
-
-        SecureStore.setItemAsync('userToken', access_token)
-
-        router.push('/(tabs)/home')
-        
-      }else{
-        Alert.alert('Erro no login!', 'Login ou senha incorretos')
-      }
-
-      console.log(email)
-
-
-    } catch (e) {
-      console.log('Erro ao fazer o login', e)
+    if(ok){
+      router.push('/(tabs)/home')
+    }else if(error){
+      Alert.alert('Erro no login!', error)
     }
-
-
-
   }
 
+  
 
   return (
     <View style={styles.container}>
@@ -72,7 +41,7 @@ export default function Login() {
             <Text style={styles.recSenha}>Recuperar Senha</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.botao} onPress={login}>
+        <TouchableOpacity style={styles.botao} onPress={handleLogin}>
           <Text style={styles.txtBotao}>Entrar</Text>
         </TouchableOpacity>
       </View>

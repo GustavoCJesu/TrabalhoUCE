@@ -1,25 +1,25 @@
-import { useEffect, useState } from 'react';
-import { ScrollView, Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native'; // Correto
+import { ScrollView, Image, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native'; // Correto
 import { MaterialIcons } from '@expo/vector-icons';
-import * as SecureStore from 'expo-secure-store';
 import { router } from 'expo-router';
+import { useProfile } from '@/src/presentation/hooks/useProfile';
+import { container } from '@/src/core/config/container';
 
 
 
 const logout = async () => {
-    await SecureStore.deleteItemAsync('userToken')
+    await container.authRepository.logout()
     router.replace('/(auth)/Login')
 }
 
 
-const CardPessoa = ({ titulo, pessoa, pessoaEmail }: { titulo: string, pessoa: string, pessoaEmail: string }) => {
+const CardPessoa = ({ titulo, pessoa, pessoaEmail, fotoUrl}: { titulo: string, pessoa: string, pessoaEmail: string, fotoUrl: string | null}) => {
     return (
         <View style={styles.itemCard}>
             <Text style={styles.subtitulo}>{titulo}</Text>
             <View style={{ flexDirection: 'row', marginTop: 20, alignItems: 'center' }}>
                 <Image
                     style={styles.imgCard}
-                    source={require('../../assets/images/icon.png')}
+                    source={fotoUrl ? { uri: fotoUrl } : require('../../assets/images/icon.png')}
                     resizeMode="contain"
                 />
                 <View style={{ marginLeft: 20, width: '80%' }}>
@@ -34,25 +34,24 @@ const CardPessoa = ({ titulo, pessoa, pessoaEmail }: { titulo: string, pessoa: s
 
 
 export default function ProfileScreen() {
-    const [id, setID] = useState('')
-    const [user, setUser] = useState('')
-    const [fisio, setFisio] = useState('')
-    const [fisioEmail, setFisioEmail] = useState('')
-    const [coord, setCoord] = useState('')
-    const [coordEmail, setCoordEmail] = useState('')
 
-    const percent = 50
+    const { profile, loading, error } = useProfile()
 
-    useEffect(() => {
+    if (loading) {
+        return (
+            <View style={styles.container}>
+                <ActivityIndicator size="large" color="#10B981" />
+            </View>
+        )
+    }
 
-        setFisio('Doutora')
-        setFisioEmail('Especialista Ortopedica')
-
-        setCoord('Coordenadora')
-        setCoordEmail('Coordenadora do Curso de Fisioterapira')
-
-    }, [])
-
+    if (error || !profile) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.titulo}>{error ?? 'Erro ao carregar'}</Text>
+            </View>
+        )
+    }
 
     return (
         <ScrollView>
@@ -60,19 +59,21 @@ export default function ProfileScreen() {
                 <View style={styles.card}>
                     <Text style={styles.titulo}>Unifae Care</Text>
                     <View style={{ alignItems: 'center' }}>
-                        <Image style={styles.imgPerfil} source={require('../../assets/images/splash-icon.png')} resizeMode="contain" />
-                        <Text style={[styles.titulo, { marginTop: 20 }]}>{user}</Text>
-                        <Text style={{ fontSize: 16, color: '#10B981' }}>ID: {id}</Text>
+                        <Image style={styles.imgPerfil} source={profile.profile.photoUrl ? { uri: profile.profile.photoUrl } : require('../../assets/images/icon.png')} resizeMode="contain" />
+                        <Text style={[styles.titulo, { marginTop: 20 }]}>{profile.profile.name}</Text>
+                        <Text style={{ fontSize: 16, color: '#10B981' }}>ID: {profile.profile.id}</Text>
                     </View>
                     <CardPessoa
                         titulo="Fisioterapeuta Responsável"
-                        pessoa={fisio}
-                        pessoaEmail={fisioEmail}
+                        pessoa={'Não informado'}
+                        pessoaEmail={'-'}
+                        fotoUrl={null}
                     />
                     <CardPessoa
                         titulo="Coordenador Responsável"
-                        pessoa={coord}
-                        pessoaEmail={coordEmail}
+                        pessoa={profile.coordinator.name}
+                        pessoaEmail={profile.coordinator.email}
+                        fotoUrl={profile.profile.photoUrl}
                     />
                     <View style={styles.itemCard}>
                         <View style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -80,11 +81,11 @@ export default function ProfileScreen() {
                                 META SEMANAL
                             </Text>
                             <Text style={{ fontSize: 30, color: 'white' }}>
-                                {percent}%
+                                {'--'}%
                                 <Text style={{ fontSize: 15 }}> Concluido</Text>
                             </Text>
                             <View style={{ width: '100%', height: 10, backgroundColor: '#fff', borderRadius: 20, overflow: 'hidden' }}>
-                                <View style={{ width: `${percent}%`, height: '100%', backgroundColor: 'blue', borderRadius: 20 }}></View>
+                                <View style={{ width: `${100}%`, height: '100%', backgroundColor: 'blue', borderRadius: 20 }}></View>
                             </View>
                         </View>
                     </View>

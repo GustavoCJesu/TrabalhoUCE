@@ -1,46 +1,85 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
+import { useProfile } from '@/src/presentation/hooks/useProfile';
+
+type Mensagem = {
+  mensagem: string
+  id: string
+  user: string
+}
 
 export default function ChatScreen() {
-  // Mock dos dados que viriam da API para mensagens de texto, simulei o esquerda = e, direita = d, porém poderia ter validações de acordo com cada usuario conforme forem os dados
-  const [dados, setDados] = useState([{mensagem: "Olá, como vai?", id: "1", user: "e"}, {mensagem: "Bem e vc?", id: "2", user: "d"}])
 
-  const renderItem = ({ item }) => {
-    if (item.user == "e"){
-      return (
-        <View style={[styles.campoTexto, {backgroundColor: 'white'}]}>
-          {/* Variavel para mensagem na esquerda */}
-          <Text style={{color: 'black', fontSize: 16}}>{item.mensagem}</Text>
-        </View>
-      )
-    } else if (item.user == "d"){
-      return (
-        <View style={{alignSelf: 'flex-end'}}>
-          <View style={[styles.campoTexto, {backgroundColor: '#D6D6D6'}]}>
-            {/* Variavel para mensagem na direita */}
-            <Text style={{color: 'black', fontSize: 16}}>{item.mensagem}</Text>
-          </View>
-        </View>
-      )
+  const { profile } = useProfile()
+
+  const [dados, setDados] = useState<Mensagem[]>([
+    { mensagem: "Olá, como vai?", id: "1", user: "e" },
+    { mensagem: "Bem e vc?", id: "2", user: "d" }
+  ])
+
+  // NOVO: guarda o texto que está sendo digitado no campo
+  const [texto, setTexto] = useState('')
+
+  // NOVO: função que envia a mensagem
+  const enviarMensagem = () => {
+    // não envia se o campo estiver vazio (ou só com espaços)
+    if (texto.trim() === '') {
+      return
     }
+
+    // monta a nova mensagem (user "d" = direita, como se fosse o próprio usuário)
+    const novaMensagem: Mensagem = {
+      mensagem: texto,
+      id: Date.now().toString(), // id único simples, baseado na hora atual
+      user: "d"
+    }
+
+    // adiciona a nova mensagem à lista existente:
+    // [...dados] copia as mensagens que já existem, e adiciona a nova no fim
+    setDados([...dados, novaMensagem])
+
+    // limpa o campo de texto após enviar
+    setTexto('')
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Fale com um especialista</Text>
+      <Text style={styles.titulo}>
+        Fale com {profile?.coordinator.name ?? 'seu responsável'}
+      </Text>
       <ScrollView style={styles.card}>
-        <FlatList
-            data={dados}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
-          />
+        {dados.map((item) => {
+          if (item.user === "e") {
+            return (
+              <View key={item.id} style={[styles.campoTexto, { backgroundColor: 'white' }]}>
+                <Text style={{ color: 'black', fontSize: 16 }}>{item.mensagem}</Text>
+              </View>
+            )
+          } else {
+            return (
+              <View key={item.id} style={{ alignSelf: 'flex-end' }}>
+                <View style={[styles.campoTexto, { backgroundColor: '#D6D6D6' }]}>
+                  <Text style={{ color: 'black', fontSize: 16 }}>{item.mensagem}</Text>
+                </View>
+              </View>
+            )
+          }
+        })}
       </ScrollView>
-      <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 16}}>
-        <TextInput style={styles.campos}></TextInput>
-        
-        {/* Aqui entraria o envio para o banco de dados e depois a renderização da mensagem na tela */}
-        <TouchableOpacity style={styles.botao}><Ionicons name='arrow-forward-outline' size={30} color='#F9FAFB'/></TouchableOpacity>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
+        {/* NOVO: o campo agora está ligado ao estado "texto" */}
+        <TextInput
+          style={styles.campos}
+          value={texto}
+          onChangeText={setTexto}
+          placeholder="Digite sua mensagem..."
+        />
+
+        {/* NOVO: o botão agora chama enviarMensagem */}
+        <TouchableOpacity style={styles.botao} onPress={enviarMensagem}>
+          <Ionicons name='arrow-forward-outline' size={30} color='#F9FAFB' />
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -53,10 +92,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#111827',
     paddingVertical: 30,
     paddingHorizontal: 20,
+    paddingBottom: 100,
   },
   campos: {
-    borderWidth: 1, 
-    borderRadius: 5, 
+    borderWidth: 1,
+    borderRadius: 5,
     paddingHorizontal: 16,
     height: 40,
     backgroundColor: 'white',
@@ -77,6 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 16
   },
   card: {
+    flex: 1,
     marginTop: 20,
     backgroundColor: '#1F2937',
     paddingHorizontal: 20,
@@ -84,10 +125,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   campoTexto: {
-    marginVertical: 16,  
-    paddingVertical: 6, 
-    paddingHorizontal: 8, 
-    borderRadius: 8, 
+    marginVertical: 16,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    borderRadius: 8,
     alignSelf: 'flex-start'
   }
 });

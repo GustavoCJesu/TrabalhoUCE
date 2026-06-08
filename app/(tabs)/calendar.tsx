@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, FlatList, ScrollView } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 
 LocaleConfig.locales['pt-br'] = {
   monthNames: [
@@ -55,35 +55,41 @@ LocaleConfig.locales['pt-br'] = {
 LocaleConfig.defaultLocale = 'pt-br';
 
 export default function CalendarScreen() {
+
+  type Agendamento = {
+    data: string
+    descricao: string
+  }
   // Só uma variavel pra permitir o usuario de selecionar o dia, pode ser usada posteriormente para marcar consultas
   const [dataSelecionada, setDataSelecionada] = useState(new Date().toISOString().split('T')[0])
 
   // Fiz um mock dos dados que viriam da API
   const [dados, setDados] = useState([
-    {data: "2026-06-15", descricao: "Consulta as 16h"}, 
-    {data: "2026-06-22", descricao: "Retorno as 14h"}
+    { data: "2026-06-15", descricao: "Consulta as 16h" },
+    { data: "2026-06-22", descricao: "Retorno as 14h" }
   ])
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: { item: Agendamento }) => {
     return (
-      <View style={{marginTop: 8, flexDirection: 'row'}}>
+      <View style={{ marginTop: 8, flexDirection: 'row' }}>
         {/* Variavel de data traduzida pra dd/MM/yyyy */}
-        <Text style={{color: '#D6D6D6', fontSize: 16}}>{item.data.split('-').reverse().join('/')} - </Text>
-        <Text style={{color: '#D6D6D6', fontSize: 16}}>{item.descricao}</Text>
+        <Text style={{ color: '#D6D6D6', fontSize: 16 }}>{item.data.split('-').reverse().join('/')} - </Text>
+        <Text style={{ color: '#D6D6D6', fontSize: 16 }}>{item.descricao}</Text>
       </View>
     )
   }
 
-  const Card = ({ dados }) => {
+  const Card = ({ dados }: { dados: Agendamento[] }) => {
     return (
       <View style={styles.card}>
-        <View style={{paddingVertical: 10}}>
-          <Text style={{color: '#F9FAFB', fontSize: 20, marginBottom: 12, textAlign: 'center'}}>Agenda</Text>
-          <FlatList
-            data={dados}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
-          />
+        <View style={{ paddingVertical: 10 }}>
+          <Text style={{ color: '#F9FAFB', fontSize: 20, marginBottom: 12, textAlign: 'center' }}>Agenda</Text>
+          {dados.map((item) => (
+            <View key={item.data} style={{ marginTop: 8, flexDirection: 'row' }}>
+              <Text style={{ color: '#D6D6D6', fontSize: 16 }}>{item.data.split('-').reverse().join('/')} - </Text>
+              <Text style={{ color: '#D6D6D6', fontSize: 16 }}>{item.descricao}</Text>
+            </View>
+          ))}
         </View>
       </View>
     );
@@ -93,7 +99,7 @@ export default function CalendarScreen() {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.titulo}>Calendário</Text>
-      <View style={{marginVertical: 16}}></View>
+      <View style={{ marginVertical: 16 }}></View>
       <Calendar style={styles.cardCalendar}
         onDayPress={(day) => {
           setDataSelecionada(day.dateString)
@@ -132,7 +138,7 @@ export default function CalendarScreen() {
         }}
       />
 
-      <Card dados={dados}/>
+      <Card dados={dados} />
     </ScrollView>
   )
 }
@@ -155,7 +161,7 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: '#fff',
     borderRadius: 16,
-  }, 
+  },
   card: {
     marginTop: 20,
     backgroundColor: '#1F2937',

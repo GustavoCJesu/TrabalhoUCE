@@ -2,6 +2,7 @@ import { ScrollView, Image, StyleSheet, Text, View, TouchableOpacity, ActivityIn
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useProfile } from '@/src/presentation/hooks/useProfile';
+import { useHome } from '@/src/presentation/hooks/useHome';
 import { container } from '@/src/core/config/container';
 
 
@@ -12,7 +13,7 @@ const logout = async () => {
 }
 
 
-const CardPessoa = ({ titulo, pessoa, pessoaEmail, fotoUrl}: { titulo: string, pessoa: string, pessoaEmail: string, fotoUrl: string | null}) => {
+const CardPessoa = ({ titulo, pessoa, pessoaEmail, fotoUrl }: { titulo: string, pessoa: string, pessoaEmail: string, fotoUrl: string | null }) => {
     return (
         <View style={styles.itemCard}>
             <Text style={styles.subtitulo}>{titulo}</Text>
@@ -36,6 +37,9 @@ const CardPessoa = ({ titulo, pessoa, pessoaEmail, fotoUrl}: { titulo: string, p
 export default function ProfileScreen() {
 
     const { profile, loading, error } = useProfile()
+    const { home } = useHome()
+
+    const percent = home?.plan.percentCompleted
 
     if (loading) {
         return (
@@ -47,8 +51,16 @@ export default function ProfileScreen() {
 
     if (error || !profile) {
         return (
-            <View style={styles.container}>
-                <Text style={styles.titulo}>{error ?? 'Erro ao carregar'}</Text>
+            <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+                <Text style={[styles.titulo, { marginBottom: 20 }]}>
+                    {error ?? 'Erro ao carregar'}
+                </Text>
+                <TouchableOpacity
+                    style={styles.botao}
+                    onPress={() => router.replace('/(auth)/Login')}
+                >
+                    <Text style={styles.txtBotao}>Ir para o login</Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -81,11 +93,11 @@ export default function ProfileScreen() {
                                 META SEMANAL
                             </Text>
                             <Text style={{ fontSize: 30, color: 'white' }}>
-                                {'--'}%
+                                {home?.plan.percentCompleted}%
                                 <Text style={{ fontSize: 15 }}> Concluido</Text>
                             </Text>
                             <View style={{ width: '100%', height: 10, backgroundColor: '#fff', borderRadius: 20, overflow: 'hidden' }}>
-                                <View style={{ width: `${100}%`, height: '100%', backgroundColor: 'blue', borderRadius: 20 }}></View>
+                                <View style={{ width: `${percent ?? 100}%`, height: '100%', backgroundColor: 'blue', borderRadius: 20 }}></View>
                             </View>
                         </View>
                     </View>
@@ -181,5 +193,17 @@ const styles = StyleSheet.create({
     },
     txt: {
         color: '#9CA3AF'
-    }
+    },
+    botao: {
+        backgroundColor: '#10B981',
+        paddingHorizontal: 40,
+        paddingVertical: 12,
+        borderRadius: 5,
+    },
+    txtBotao: {
+        fontSize: 16,
+        color: '#F9FAFB',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
 });

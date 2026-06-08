@@ -1,4 +1,5 @@
 import { useHome } from '@/src/presentation/hooks/useHome';
+import { useProfile } from '@/src/presentation/hooks/useProfile';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator } from 'react-native';
@@ -7,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const { home, loading, error } = useHome()
+  const { profile } = useProfile()
 
   if (loading) {
     return (
@@ -16,7 +18,7 @@ export default function HomeScreen() {
     )
   }
 
-  if (error || !home) {
+  if (error || !home || !profile) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.titulo}>{error ?? 'Erro ao carregar'}</Text>
@@ -30,8 +32,8 @@ export default function HomeScreen() {
         <View style={styles.pageContent}>
           <View style={[styles.sec1, { marginBottom: 40 }]}>
             <View>
-              <Text style={styles.titulo}>Olá, Paciente!</Text>
-              <Text style={styles.subtitulo}>Seu cuidado diário{'\n'}faz toda a diferença na{'\n'}sua recuperação</Text>
+              <Text style={styles.titulo}>Olá, {profile.profile.name}!</Text>
+              <Text style={styles.subtitulo}>{home.motivation.message}</Text>
             </View>
             <Image
               style={styles.imgCard}
@@ -118,6 +120,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 15,
     color: 'gray',
+    width: 170
   },
   itemCard: {
     marginTop: 30,

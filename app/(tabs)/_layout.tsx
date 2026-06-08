@@ -60,10 +60,35 @@ export default function TabsLayout() {
         name="feedback"
         options={{
           title: 'Feedback',
-
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons
+              name="rate-review"
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          title: 'Agendamentos',
           tabBarIcon: ({ color }) => (
             <Ionicons
-              name="chatbox-outline"
+              name="calendar-outline"
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="chat"
+        options={{
+          title: 'Chat',
+          tabBarIcon: ({ color }) => (
+            <Ionicons
+              name="chatbubble-outline"
               size={24}
               color={color}
             />

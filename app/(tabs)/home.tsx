@@ -5,10 +5,13 @@ import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router'
 
 export default function HomeScreen() {
   const { home, loading, error } = useHome()
   const { profile } = useProfile()
+
+  const router = useRouter()
 
   if (loading) {
     return (
@@ -18,13 +21,21 @@ export default function HomeScreen() {
     )
   }
 
-  if (error || !home || !profile) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.titulo}>{error ?? 'Erro ao carregar'}</Text>
-      </SafeAreaView>
-    )
-  }
+  if (error || !profile || !home) {
+          return (
+              <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+                  <Text style={[styles.titulo, { marginBottom: 20 }]}>
+                      {error ?? 'Erro ao carregar'}
+                  </Text>
+                  <TouchableOpacity
+                      style={styles.botao}
+                      onPress={() => router.replace('/(auth)/Login')}
+                  >
+                      <Text style={styles.txtBotao}>Ir para o login</Text>
+                  </TouchableOpacity>
+              </View>
+          )
+      }
 
   return (
     <SafeAreaView style={styles.container}>

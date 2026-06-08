@@ -1,5 +1,5 @@
-import { Tabs } from 'expo-router';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
 
 export default function TabsLayout() {
   return (
@@ -55,14 +55,13 @@ export default function TabsLayout() {
           ),
         }}
       />
-
       <Tabs.Screen
-        name="feedback"
+        name="exercises"
         options={{
-          title: 'Feedback',
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons
-              name="rate-review"
+          title: 'Exercícios',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? 'barbell' : 'barbell-outline'}
               size={24}
               color={color}
             />

@@ -9,6 +9,9 @@ import { HomeRepository } from '@/src/data/repositories/HomeRepository';
 import { ProfileRemoteDataSource } from '@/src/data/datasources/ProfileRemoteDataSource';
 import { ProfileRepository } from '@/src/data/repositories/ProfileRepository';
 import { GetProfileUseCase } from '@/src/application/usecases/GetProfileUseCase';
+import { ExercisesRemoteDataSource } from '@/src/data/datasources/ExercisesRemoteDataSource';
+import { ExercisesRepository } from '@/src/data/repositories/ExercisesRepository';
+import { GetExercisesUseCase } from '@/src/application/usecases/GetExercisesUseCase';
 
 
 
@@ -17,6 +20,8 @@ const localDataSource = new AuthLocalDataSource()
 
 const authRepository = new AuthRepository(remoteDataSouce, localDataSource)
 
+const exercisesDataSource = new ExercisesRemoteDataSource()
+const exercisesRepository = new ExercisesRepository(exercisesDataSource, authRepository)
 
 const homeDataSource = new HomeRemoteDataSource()
 const homeRepository = new HomeRepository(homeDataSource, authRepository)
@@ -29,5 +34,6 @@ export const container = {
     loginUseCase: new LoginUseCase(authRepository),
     checkAuthUseCase: new CheckAuthUseCase(authRepository),
     getHomeUseCase: new GetHomeUseCase(homeRepository),
-    getProfile: new GetProfileUseCase(profileRepository)
+    getProfile: new GetProfileUseCase(profileRepository),
+    getExercisesUseCase: new GetExercisesUseCase(exercisesRepository),
 }

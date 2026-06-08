@@ -1,14 +1,10 @@
-// app/(tabs)/exercises.tsx  (ou onde sua rota de exercícios ficar)
-
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useExercises } from '@/src/presentation/hooks/useExercises';
-import { useProfile } from '@/src/presentation/hooks/useProfile';
 import { router } from 'expo-router';
 
 export default function ExercisesScreen() {
     const { exercises, loading, error } = useExercises()
-    const profile = useProfile()
 
     if (loading) {
         return (
@@ -18,7 +14,7 @@ export default function ExercisesScreen() {
         )
     }
 
-    if (error || !profile || !exercises) {
+    if (error || !exercises) {
         return (
             <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
                 <Text style={[styles.titulo, { marginBottom: 20 }]}>
@@ -47,7 +43,11 @@ export default function ExercisesScreen() {
 
             <View style={{ marginTop: 20 }}>
                 {exercises.items.map((item) => (
-                    <View key={item.prescriptionItemId} style={styles.card}>
+                    <TouchableOpacity
+                        key={item.prescriptionItemId}
+                        style={styles.card}
+                        onPress={() => router.push(`/exercise/${item.prescriptionItemId}`)}
+                    >
                         <View style={styles.cardHeader}>
                             <Text style={styles.cardTitulo}>{item.title}</Text>
                             {item.completedToday ? (
@@ -72,7 +72,7 @@ export default function ExercisesScreen() {
                         <Text style={styles.status}>
                             {item.completedToday ? 'Concluído hoje' : 'Pendente hoje'}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
                 ))}
             </View>
 

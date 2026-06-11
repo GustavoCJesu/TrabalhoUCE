@@ -70,10 +70,6 @@ Exemplo (carregar a home): a tela usa `useHome`, que chama `GetHomeUseCase`, que
 - **Perfil** — dados do paciente e da coordenadora responsável.
 - **Logout** — encerra a sessão e limpa o token.
 
-### Pendências conhecidas
-- **Softblock ao expirar token**: quando o token expira durante o uso, a tela exibe "Sessão expirada" mas não redireciona automaticamente para o login. Solução planejada: tratamento centralizado de erro de sessão (401) que force o redirecionamento.
-- **Exercícios**: a tela de lista de exercícios (`/app/home/plan/exercises`) ainda não foi integrada.
-
 ---
 
 ## Como rodar

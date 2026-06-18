@@ -1,12 +1,14 @@
-import {
-  ScrollView, StyleSheet, Text, View,
-  TouchableOpacity, ActivityIndicator, Image,
-} from 'react-native';
+import { container } from '@/src/core/config/container';
+import { useHome } from '@/src/presentation/hooks/useHome';
+import { useProfile } from '@/src/presentation/hooks/useProfile';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useProfile } from '@/src/presentation/hooks/useProfile';
-import { useHome } from '@/src/presentation/hooks/useHome';
-import { container } from '@/src/core/config/container';
+import {
+  ActivityIndicator, Image,
+  ScrollView, StyleSheet, Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 const logout = async () => {
   await container.authRepository.logout();
@@ -364,6 +366,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderWidth: 1,
     borderColor: '#7F1D1D',
+    marginBottom: 20,
   },
   logoutText: {
     color: '#EF4444',
